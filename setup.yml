@@ -1,0 +1,65 @@
+- hosts: all
+  connection: docker
+
+  vars:
+    PHP_VERSION: 56
+
+    php_packages:
+      - php
+      - php-devel
+      - php-mbstring
+      - php-pdo
+      - php-mysqlnd
+      - php-pgsql
+      - php-gd
+      - php-xml
+      - php-mcrypt
+      - php-imap
+      - php-pecl-xdebug
+      - php-opcache
+
+    yum_repositories:
+      - http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+      - http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+
+  handlers:
+    - name: restart httpd
+      service: name=httpd state=restarted
+
+    - name: restart ntpd
+      service: name=ntpd state=restarted
+
+  tasks:
+    - name: add yum repositories
+      yum: name={{ yum_repositories }} state=installed
+
+
+    - name: be sure ntp is installed
+      yum: name=ntp state=installed
+
+    - name: be sure ntp is configured
+      replace: dest=/etc/sysconfig/ntpd regexp='^OPTIONS' replace='#OPTIONS'
+      notify:
+        - restart ntpd
+
+    - name: be sure ntpd is running and enabled
+      service: name=ntpd state=started enabled=yes
+
+
+    - name: be sure php is installed
+      yum: name={{ php_packages }} state=installed enablerepo=remi,remi-php{{ PHP_VERSION}}
+
+
+    - name: be sure mod_ssl is installed
+      yum: name=mod_ssl state=installed
+      notify:
+        - restart httpd
+
+    - name: be sure httpd is running and enabled
+      service: name=httpd state=started enabled=yes
+
+
+    - name: docker commit
+      local_action: shell /usr/local/bin/docker commit {{ inventory_hostname }} {{ inventory_hostname }}-php{{ PHP_VERSION }}
+
+# vim:ft=ansible:

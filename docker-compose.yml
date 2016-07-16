@@ -1,0 +1,7 @@
+centos:
+  image: centos:6.8
+  container_name: centos6
+  ports:
+    - "80:80"
+    - "443:443"
+  entrypoint: tail -f /dev/null
