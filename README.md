@@ -1,4 +1,4 @@
-# docker-ansible-centos-php
+# Create Docker Image by Ansible
 
     // 前準備
     % brew install ansible docker docker-machine-docker-compose
