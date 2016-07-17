@@ -24,6 +24,7 @@
     // dockeriイメージの作成と確認
     % ansible-playbook -i hosts setup.yml -vv  --extra-vars PHP_VERSION=56
     % docker images | gerp php
+    % docker push oppara/centos6-php56:latest 
 
     // コンテナ削除
     % docker-compose down

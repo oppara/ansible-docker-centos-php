@@ -1,6 +1,6 @@
 dev:
   restart: always
-  image: centos6-php56
+  image: oppara/centos6-php56
   ports:
     - "80:80"
     - "443:443"
