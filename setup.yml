@@ -4,6 +4,8 @@
   vars:
     PHP_VERSION: 56
 
+    user: oppara
+
     php_packages:
       - php
       - php-devel
@@ -62,6 +64,6 @@
       copy: src=./services.sh dest=/etc/services.sh owner=root group=root mode=0755
 
     - name: docker commit
-      local_action: shell /usr/local/bin/docker commit {{ inventory_hostname }} {{ inventory_hostname }}-php{{ PHP_VERSION }}
+      local_action: shell /usr/local/bin/docker commit {{ inventory_hostname }} {{ user }}/{{ inventory_hostname }}-php{{ PHP_VERSION }}
 
 # vim:ft=ansible:
